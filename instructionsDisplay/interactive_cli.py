@@ -2,15 +2,22 @@
 import os
 import json
 import pprint
+import socket
 import questionary
-from coil_info import CoilProperties
+from coil_controller import CoilProperties
+from mqtt_controller import MyMQTTClass
 
 # TODO: implement log to file
 
-pp = pprint.PrettyPrinter(indent=2, sort_dicts=False, compact=False)
+#region -------------------    GLOBAL INIT      ----------------------------
 os.system("clear")
+
+hostname = socket.gethostname()
+hostname = hostname.split(".")[0]
 test_coil = CoilProperties()
 _continue = True
+
+pp = pprint.PrettyPrinter(indent=2, sort_dicts=False, compact=False)
 
 uart_msg_dict = {}
 with open("instructionsDisplay/uart_messages.json") as json_file:
@@ -18,6 +25,25 @@ with open("instructionsDisplay/uart_messages.json") as json_file:
 uart_string = []
 uart_message = {"category": [], "layer": [], "payload": [], "test": False}
 
+# endregion -------------------------------------------------------------------
+
+#region -------------------    FUNCTIONS      ----------------------------
+def test_coil_controller():
+    test_message = ",".join(uart_message["payload"])
+    print("Testing Message = {}".format(test_message))
+    test_coil.set_controller_properties(test_message)
+    test_coil.get_instructions_url()
+    pp.pprint(test_coil.__dict__())
+    # coil.set_coil_properties(message)
+    # print("Testing Message = {}".format(message))
+    # coil.get_instructions_url()
+    # pp.pprint(coil.__dict__())
+    # return
+
+def test_mqtt_controller(mqttc, message):
+    pass
+
+# endregion -------------------------------------------------------------------
 
 while _continue:
     uart_message["category"].append(
@@ -54,11 +80,13 @@ while _continue:
     ).ask()
 
     if uart_message["test"]:
-        test_message = ",".join(uart_message["payload"])
-        print("Testing Message = {}".format(test_message))
-        test_coil.assign_attributes(test_message)
-        test_coil.build_url()
-        pp.pprint(test_coil.__dict__())
+        # test_message = ",".join(uart_message["payload"])
+        # test_coil_controller(test_coil, test_message)
+        test_coil_controller()
+        #test_mqtt_controller()
+        
+        
+        
 
     _continue = questionary.confirm("Continue Testing", default=True).ask()
 
@@ -70,5 +98,4 @@ while _continue:
         uart_message["payload"].clear()
         uart_message["test"] = False
 
-def mqtt_test():
-    pass
+

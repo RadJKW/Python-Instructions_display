@@ -1,21 +1,118 @@
-import json 
-from paho.mqtt.client import Client as mqtt
-class MqttController:
-    def __init__(self, coil_properties):
-        self.client = mqtt()
-        self.client.on_connect = self.on_connect
-        self.client.on_message = self.on_message
-        self.client.connect("localhost", 1883, 60)
-        self.client.loop_start()
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2013 Roger Light <roger@atchoo.org>
+#
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Distribution License v1.0
+# which accompanies this distribution.
+#
+# The Eclipse Distribution License is available at
+#   http://www.eclipse.org/org/documents/edl-v10.php.
+#
+# Contributors:
+#    Roger Light - initial implementation
+
+# This example shows how you can use the MQTT client in a class.
+
+#from context import context  # Ensures paho is in PYTHONPATH
+
+import socket
+import threading
+import time
+import paho.mqtt.client as mqtt
+import json
+import pprint as pp 
+import os
 
 
-    def on_connect(self, client, userdata, flags, rc):
-        print("Connected with result code "+str(rc))
-        self.client.subscribe("coil_properties")
-        # publish the coilproperties to the topic as a json string
+class MyMQTTClass(mqtt.Client):
 
-    def on_message(self, client, userdata, msg):
-        pass 
+    def on_connect(self, mqttc, obj, flags, rc):
+        pass
+        # if rc == 0:
+        #     print("Connected to MQTT Broker!")
+        # else:
+        #     print("Failed to connect, return code %d\n", rc)
 
-    def publish_message(self, message):
-        self.client.publish()
+    def on_connect_fail(self, mqttc, obj):
+        pass
+        # print("Connect failed")
+
+    def on_message(self, mqttc, obj, msg):
+        # if message is a json string, convert to dict and
+        print("MESSAGE RECEIVED: {}".format(msg.topic))
+        if msg.payload is not None:            
+            msg.payload = json.loads(msg.payload)
+            pp.pprint(msg.payload, indent=2, sort_dicts=False, compact=False)
+            return
+        print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
+
+    def on_publish(self, mqttc, obj, mid):
+        pass
+        # #print("mid: "+str(mid))
+        # print("Published message: "+str(mid))
+
+    def on_subscribe(self, mqttc, obj, mid, granted_qos):
+        pass
+        # print("Subscribed: "+str(mid)+" "+str(granted_qos))
+
+    def on_log(self, mqttc, obj, level, string):
+        # if logging level is MQTT_LOG_ERROR
+        if level == mqtt.MQTT_LOG_ERROR:
+            print("LOGGING: {}".format(string))
+        
+        
+
+    # def run(self):
+    #     self.connect(self.broker, self.timeout)
+    #     self.subscribe("$SYS/#", 0)
+    #     self.publish(topic = "pi/pythonTest", payload = "Hello World!", qos = 2, retain = False)
+
+    #     rc = 0
+    #     while rc == 0:
+    #         rc = self.loop()
+    #     return rc
+
+
+# If you want to use a specific client id, use
+# mqttc = MyMQTTClass("client-id")
+# but note that the client id must be unique on the broker. Leaving the client
+# id parameter empty will generate a random id for you.
+
+
+
+# if rc return code not 0, try to reconnect 3 times and then exit if rc is still not 0
+
+def do_mqtt_stuff(hostname):
+    mqttc = MyMQTTClass(client_id="python-test")
+    mqttc.connect("192.168.0.30", 1883, 60)    
+    mqttc.publish(topic = "pi/{}/coil_info".format(hostname), payload = "Hello World!", qos = 2, retain = False)
+    mqttc.subscribe("pi/cw88/#", 2)
+    mqttc.loop_forever() 
+   
+    
+    
+    
+def do_other_stuff():
+    while True:
+        time.sleep(30)
+        print("Hello World!")
+    
+
+
+def main():
+    hostname = socket.gethostname()
+    hostname = hostname.split(".")[0]
+    print("Hostname: {}".format(hostname))
+    # allow mqtt to run in a seperate thread and do other stuff at the same time
+    # both should be able to print to the console
+    other_thread = threading.Thread(target=do_other_stuff)
+    other_thread.start()
+    do_mqtt_stuff(hostname)
+
+
+    
+    
+if __name__ == "__main__":
+    os.system("clear")
+    main()

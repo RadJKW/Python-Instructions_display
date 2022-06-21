@@ -51,7 +51,7 @@ class CoilProperties:
             },
         }
 
-    def assign_attributes(self, new_message):
+    def set_controller_properties(self, new_message):
         print(".... assigning attributes")
         
         self.warning = []
@@ -86,7 +86,7 @@ class CoilProperties:
             ))
         return
 
-    def build_url(self):
+    def get_instructions_url(self):
         print("....building URL\n")
         ## Check if self.coil_division is None
         if self.coil_division is None:
