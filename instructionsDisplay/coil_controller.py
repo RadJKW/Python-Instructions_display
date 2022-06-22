@@ -13,8 +13,7 @@ os.system("clear")
 
 
 class CoilProperties:
-    
-    
+
     base_url: ClassVar[
         str
     ] = "http://svr-webint1/WindingPractices/Home/Display?div=D{division_number}&stop={instructions_code}"
@@ -51,9 +50,9 @@ class CoilProperties:
             },
         }
 
-    def set_controller_properties(self, new_message):
+    def set_coil_properties(self, new_message):
         print(".... assigning attributes")
-        
+
         self.warning = []
         if self.prev_message == new_message:
             self.warning.append(
@@ -65,7 +64,9 @@ class CoilProperties:
         if len(new_message) == 1:
             for code in self.ignore_codes:
                 if new_message[0] in code:
-                    self.warning.append("Message is an ignore code. Ignoring new_message.")
+                    self.warning.append(
+                        "Message is an ignore code. Ignoring new_message."
+                    )
                     return
             self.key = new_message[0]
         elif len(new_message) == 3:
@@ -81,9 +82,11 @@ class CoilProperties:
             self.key = new_message[1]
             return
         else:
-            self.warning.append("The new_message {new_message} is not a valid new_message. Please check the new_message and try again.".format(
-                new_message=new_message
-            ))
+            self.warning.append(
+                "The new_message {new_message} is not a valid new_message. Please check the new_message and try again.".format(
+                    new_message=new_message
+                )
+            )
         return
 
     def get_instructions_url(self):
@@ -91,9 +94,9 @@ class CoilProperties:
         ## Check if self.coil_division is None
         if self.coil_division is None:
             self.warning.append("The Coil's Division is not set.")
-            if self.return_url is None: 
+            if self.return_url is None:
                 self.return_url = self.base_url.format(
-                    division_number='', instructions_code=''
+                    division_number="", instructions_code=""
                 )
             return
 
@@ -105,3 +108,6 @@ class CoilProperties:
             division_number=self.coil_division, instructions_code=self.key
         )
         return
+
+
+# class CoilID(CoilProperties):

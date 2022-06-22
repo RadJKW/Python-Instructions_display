@@ -31,7 +31,7 @@ uart_message = {"category": [], "layer": [], "payload": [], "test": False}
 def test_coil_controller():
     test_message = ",".join(uart_message["payload"])
     print("Testing Message = {}".format(test_message))
-    test_coil.set_controller_properties(test_message)
+    test_coil.set_coil_properties(test_message)
     test_coil.get_instructions_url()
     pp.pprint(test_coil.__dict__())
     # coil.set_coil_properties(message)

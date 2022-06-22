@@ -1,0 +1,16 @@
+- Dump coil properties object ot a sql database. 
+SQL DATA BASE RECORDS: 
+    - pi_hostname (coil winder machine ID)
+    - pi ip_address
+    - pi status (online/offline)
+    - pi_last_seen (last time the pi was seen)
+
+    - Employee Number
+    - coil_id (coil ID [number])
+    - division
+    - z80_uart_message
+    - stop_code
+    - instructions_url
+    - winding layer
+    - winding material 
+    - material width 
