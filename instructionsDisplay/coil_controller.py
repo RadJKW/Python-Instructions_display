@@ -1,5 +1,6 @@
-from typing import ClassVar
 import os
+import datetime
+from typing import ClassVar
 
 os.system("clear")
 
@@ -30,6 +31,7 @@ class CoilProperties:
         self.return_url = None
         self.warning = []
         self.prev_message = None
+        self.date_time = None
 
     def __dict__(self):
         return {
@@ -60,12 +62,12 @@ class CoilProperties:
         self.prev_message = new_message
         new_message = new_message.split(",")
         if len(new_message) == 1:
-            for code in self.ignore_codes:
-                if new_message[0] in code:
-                    self.warning.append(
-                        "Message is an ignore code. Ignoring new_message."
-                    )
-                    return
+            has_value = any(code in new_message[0] for code in self.ignore_codes[0])
+            if has_value:
+                self.warning.append(
+                    "Message is an ignore code. Ignoring new_message."
+                )
+            return
             self.key = new_message[0]
         elif len(new_message) == 3:
             self.key = new_message[0]
