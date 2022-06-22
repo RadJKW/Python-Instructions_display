@@ -1,6 +1,4 @@
-from dataclasses import dataclass
 from typing import ClassVar
-import pprint
 import os
 
 os.system("clear")

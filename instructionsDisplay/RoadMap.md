@@ -1,0 +1,23 @@
+- Dump coil properties object ot a sql database. 
+
+SQL DATA BASE RECORDS: 
+- Table: coil_winding_machines
+    - Columns:
+        - coil_winding_machine_id
+        - host_name (radpi-cw000, cwd_m0000)
+        - host_ip
+        - host_type ([z80 / pi], PC)
+        - host_status (online/offline)
+        - last_seen (last time the machine was seen)
+- Table: cw_machine_coil_data
+    - Columns:
+        - Employee Number
+        - coil_number (coil ID [number])
+        - division
+        - z80_message
+        - stop_code
+        - instructions_url
+        - winding layer
+        - winding material 
+        - material width 
+        - date_time_stamp (verify format)
