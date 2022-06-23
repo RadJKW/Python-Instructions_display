@@ -21,3 +21,4 @@ SQL DATA BASE RECORDS:
         - winding material 
         - material width 
         - date_time_stamp (verify format)
+
