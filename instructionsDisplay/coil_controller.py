@@ -27,44 +27,45 @@ class CoilProperties:
         self.winding_layer = None
         self.winding_material = None
         self.material_width = None
-        self.url_stop = None        
+        self.url_stop = None
         self.web_url = None
-        self.warning = []
+        self.warnings = []
         self.prev_message = None
         self.date_time = None
         self.stop_code = None
 
     def __dict__(self):
         return_dict = {
-            #return self."item" if self."item" is not None else "None"
-            "coil_number": self.coil_number,
-            "coil_division": self.coil_division,
+            # return self."item" if self."item" is not None else "None"
+            "number": self.coil_number,
+            "division": self.coil_division,
             "stop_code": self.stop_code,
-            "winding_layer": self.winding_layer,
-            "winding_material": self.winding_material,
-            "material_width": self.material_width,
-            "z80_output": self.prev_message,
-            "url_address": self.web_url,
-            "date_time": self.date_time,            
-            "warnings": self.warning,
-        } 
+            "layer": self.winding_layer,
+            "material": self.winding_material,
+            "width": self.material_width,
+            "rx_message": self.prev_message,
+            "web_url": self.web_url,
+            "date_time": self.date_time,
+            "warnings": self.warnings,
+        }
         for key in return_dict:
             if return_dict[key] is None:
-                if key == "coil_number":
-                    return_dict[key] = 0
-                elif key == "coil_division":
-                    return_dict[key] = 0
-                elif key =="material_width":
-                    return_dict[key] = 00.00
+                if key == "number":
+                    return_dict[key] = '0000000000000'
+                elif key == "division":
+                    return_dict[key] = '0'
+                elif key == "width":
+                    return_dict[key] = '00.0000'
                 else:
                     return_dict[key] = "None"
         return return_dict
+
     def set_coil_properties(self, new_message):
         print("....assigning attributes")
-        self.warning = []
+        self.warnings = []
         self.date_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if self.prev_message == new_message:
-            self.warning.append(
+            self.warnings.append(
                 "Message is the same as previous new_message. Ignoring new_message."
             )
             return
@@ -74,7 +75,7 @@ class CoilProperties:
         if len(new_message) == 1:
             self.stop_code = new_message[0]
             if new_message[0] in self.ignore_codes[0]:
-                self.warning.append("Message is an ignore code.")
+                self.warnings.append("Message is an ignore code.")
             else:
                 self.url_stop = new_message[0]
             return
@@ -94,13 +95,14 @@ class CoilProperties:
             self.material_width = new_message[3]
             return
 
-        self.warning.append("Message is not a valid message.")
+        self.stop_code = "-"
+        self.warnings.append("Received corrupted message.")
 
     def get_instructions_url(self):
         print("....building URL\n")
         ## Check if self.coil_division is None
         if self.coil_division is None:
-            self.warning.append("The Coil's Division is not set.")
+            self.warnings.append("The Coil's Division is not set.")
             if self.web_url is None:
                 self.web_url = self.base_url.format(
                     division_number="", instructions_code=""
