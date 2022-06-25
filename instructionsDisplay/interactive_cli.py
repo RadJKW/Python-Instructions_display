@@ -129,7 +129,6 @@ def test_coil_controller(coil, message):
     pp.pprint(coil.__dict__())
     print("\n")
     sql_data = coil.__dict__()
-    # TODO: use insert_data from sql_controller.py
     insert_data(sql_connection, f"{cw_data_table_name}", sql_data)
     return
 

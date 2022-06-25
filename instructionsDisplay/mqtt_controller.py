@@ -82,8 +82,6 @@ def main():
     hostname = socket.gethostname()
     hostname = hostname.split(".")[0]
     print("Hostname: {}".format(hostname))
-    # allow mqtt to run in a seperate thread and do other stuff at the same time
-    # both should be able to print to the console
     other_thread = threading.Thread(target=do_other_stuff)
     other_thread.start()
     do_mqtt_stuff(hostname)
