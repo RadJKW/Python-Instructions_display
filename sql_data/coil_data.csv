@@ -1,0 +1,9 @@
+"id","coil_number","division","stop_code","layer","material","width","rx_message","web_url","date_time","warnings","machine_id","operator_id"
+1,"0050742818658",1,"NC","","","","NC,0050742818658,1","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:34","",1,10001
+2,"0050655639526",2,"NW","LV","SC",0.0041,"NW,LV,SC,00.00410","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:43","",1,20001
+3,"0050572466275",1,"NC","","","","NC,0050572466275,1","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:52","",1,10001
+4,"0050509721965",2,"NW","LV","SC",0.0041,"NW,LV,SC,00.00410","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:53","",1,20001
+5,"0050321277143",1,"NC","","","","NC,0050321277143,1","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:56","",1,10001
+6,"0050792053894",2,"NW","LV","SC",0.0041,"NW,LV,SC,00.00410","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:57","",1,20001
+7,"0050531444376",1,"NC","","","","NC,0050531444376,1","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:57","",1,10001
+8,"0050355791544",2,"NW","LV","SC",0.0041,"NW,LV,SC,00.00410","http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC","2022-06-28 16:32:58","",1,20001
