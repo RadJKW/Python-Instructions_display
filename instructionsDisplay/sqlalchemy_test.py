@@ -14,7 +14,8 @@ from sqlalchemy import (
     String,
     DateTime,
     Boolean,
-    create_engine
+    create_engine,
+    func
 )
 from sqlalchemy.orm import declarative_base, Session, relationship
 
@@ -112,19 +113,30 @@ Base.metadata.create_all(mysql_engine)
 # %%
 with Session(mysql_engine) as session:
     # Create a new operator
-    john_doe = Operators(
-        id=10001,
-        name="John Doe",
-        session_start=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    )
+    # john_doe = Operators(
+    #     id=10001,
+    #     name="John Doe",
+    #     session_start=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    # )
 
-    jane_doe = Operators(
-        id=20001,
-        name="Jane Doe",
-        session_start=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-    )
+    # jane_doe = Operators(
+    #     id=20001,
+    #     name="Jane Doe",
+    #     session_start=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    # )
+    
+    #generate 5 more random operators 
 
-    session.add_all([john_doe, jane_doe])
+    for i in range(5):
+        operator = Operators(
+            id=random.randint(10001, 20000),
+            name="Operator {}".format(i),
+            session_start=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
+        session.add(operator)
+
+
+    # session.add_all([john_doe, jane_doe])
     session.commit()
 
 # %%
@@ -139,28 +151,87 @@ with Session(mysql_engine) as session:
         active=True,
         last_updated=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     )
+    coil_winder_88 = Machines(
+        id = "088", 
+        division = 1, 
+        host_name = "cw-088",
+        host_ip = "10.11.18.50",
+        host_type = "PI", 
+        active = True,
+        last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    coil_winder_89 = Machines(
+        id = "089",
+        division = 1,
+        host_name = "cw-089",
+        host_ip = "10.11.18.51",
+        host_type = "PI",
+        active = True,
+        last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )
+    coil_winder_83 = Machines(
+        id = "083",
+        division = 1,
+        host_name = "cw-083",
+        host_ip = "10.11.18.52", 
+        host_type = "PI",
+        active = True,
+        last_updated = datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+    )   
 
-    session.add(coil_winder_1)
+
+    session.add_all([coil_winder_88, coil_winder_89, coil_winder_83])
     session.commit()
 # %%
-random_coil_number = "0050" + str(random.randint(100000000, 999999999))
+
 
 with Session(mysql_engine) as session:
-    # generate a random coil number where total legth is 13 digits and the first 4 digita are 0050
-
-    coil_data_1 = CoilData(
-        coil_number=random_coil_number,
-        division=1,
-        stop_code="NC",
-        rx_message="NC,{},1".format(random_coil_number),
-        web_url="http://svr-webint1/WindingPractices/Home/Display?div=D1&stop=NC",
-        date_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        machine_id="001",
-        operator_id=10001,
-    )
-
-    session.add(coil_data_1)
+    # generate 50 random coil numbers using random_coil_number
+    # each coil number is associated with a random operator from the database and a random machine from the database
+    
+    for i in range(50):
+        # choose a random operator from the database
+        operator = session.query(Operators).order_by(func.random()).first()
+        # choose a random machine from the database
+        machine = session.query(Machines).order_by(func.random()).first()
+        coil_data = CoilData(
+            coil_number="0050" + str(random.randint(100000000, 999999999)),
+            # set the division to the random machine's division
+            division=machine.division,
+            stop_code="NC",
+            layer=None,
+            material=None,
+            width=None,
+            rx_message="Message {}".format(i),
+            web_url="WEB_URL" + str(i),
+            date_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            warnings=None,
+            machine_id=machine.id,
+            operator_id=operator.id,
+        )
+        session.add(coil_data)
     session.commit()
+#%% 
+## for each coil number in the database, add 10 entries to the coil_data table with the same [coil number, operator, machine, division], but with everything else random 
+with Session(mysql_engine) as session:
+    for coil_number in session.query(CoilData.coil_number).distinct():
+        for i in range(10):
+            coil_data = CoilData(
+                coil_number=coil_number[0],
+                division=session.query(CoilData.division).filter(CoilData.coil_number == coil_number[0]).first()[0],
+                stop_code="NC",
+                layer=None,
+                material=None,
+                width=None,
+                rx_message="Message {}".format(i),
+                web_url="WEB_URL" + str(i),
+                date_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                warnings=None,
+                machine_id=session.query(CoilData.machine_id).filter(CoilData.coil_number == coil_number[0]).first()[0],
+                operator_id=session.query(CoilData.operator_id).filter(CoilData.coil_number == coil_number[0]).first()[0],
+            )
+            session.add(coil_data)
+    session.commit() 
 
 # %%
 random_coil_number = "0050" + str(random.randint(100000000, 999999999))
