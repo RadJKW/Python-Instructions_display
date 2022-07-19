@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# TODO: // use SQL Alchemy instead of sqlite for this module
 import os
 import json
 from pickle import NONE
@@ -11,6 +12,7 @@ from coil_controller import CoilProperties
 from mqtt_controller import MyMQTTClass
 
 
+# TODO: // change Host to a Dataclass ? 
 class Host(Enum):
     id = "001"
     name = socket.gethostname().split(".")[0]

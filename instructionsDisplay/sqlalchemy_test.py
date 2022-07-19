@@ -3,7 +3,6 @@
 from datetime import datetime
 import random
 from urllib.parse import quote_plus as url_quote
-from click import echo
 from sqlalchemy import (
     TEXT,
     Float,
@@ -18,6 +17,8 @@ from sqlalchemy import (
     func
 )
 from sqlalchemy.orm import declarative_base, Session, relationship
+# import sql_objects.py from models folder
+from models.sql_objects import * 
 
 
 Base = declarative_base()

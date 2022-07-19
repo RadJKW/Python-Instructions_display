@@ -115,4 +115,4 @@ class CoilProperties:
         return
 
 
-# class CoilID(CoilProperties):
+
